@@ -9,6 +9,9 @@ import org.junit.Test
 @Test
 class StopwatchTest {
 
+  /**
+    * Test that the non-dimensional time of the kernel is 1
+    */
   @Test
   def testTime(): Unit = {
     val theta: Double = Stopwatch.time(RandomGenerationBenchmark.kernel(), benchmark = "RandomGeneration")

@@ -2,16 +2,15 @@ package io.citrine.theta
 
 object Stopwatch {
   /**
-    * Quick timer utility.
+    * Time a block and normalize the result by the time of a benchmark
     *
-    * @param cmd command to run
-    * @tparam R the return type of the command
-    * @return the timed command's return value
+    * @param block block to run
+    * @return the non-dimensional time of the block
     */
-  def time[R](cmd: => R, benchmark: String = "Default", nWarm: Int = 2, nTrial: Int = 1): Double = {
-    (0 until nWarm).foreach(i => cmd)
+  def time[R](block: => R, benchmark: String = "Default", nWarm: Int = 2, nTrial: Int = 1): Double = {
+    (0 until nWarm).foreach(i => block)
     val start = System.nanoTime()
-    (0 until nTrial).foreach(i => cmd)
+    (0 until nTrial).foreach(i => block)
     val end = System.nanoTime()
     (end - start) * 1.0e-9 / (nTrial * BenchmarkRegistry.getTime(benchmark))
   }
