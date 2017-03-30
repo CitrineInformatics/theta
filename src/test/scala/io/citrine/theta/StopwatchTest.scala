@@ -21,6 +21,9 @@ class StopwatchTest {
     assert(theta > 0.8, s"RandomGeneration benchmark inconsistent (too fast ${theta})")
   }
 
+  /**
+    * Test that the non-dimensional time of the STREAM benchmark is 1
+    */
   @Test
   def testTimeStream(): Unit = {
     val a: Array[Double] = new Array[Double](StreamBenchmark.N)
@@ -36,22 +39,7 @@ class StopwatchTest {
 
 object StopwatchTest {
   def main(argv: Array[String]): Unit = {
-    val timee = Stopwatch.time(RandomGenerationBenchmark.kernel(), benchmark = "RandomGeneration")
-    println(s"Timed at ${timee}")
-
-    {
-      (0 until 64).foreach { i =>
-        val start = System.nanoTime()
-        RandomGenerationBenchmark.kernel()
-        println(s"Took ${System.nanoTime() - start}")
-      }
-    }
-
-    {
-      (0 until 64).foreach { i =>
-        val time = Stopwatch.time(RandomGenerationBenchmark.kernel(), benchmark = "RandomGeneration")
-        println(s"Timed at ${time}")
-      }
-    }
+    new StopwatchTest().testTimeDefault()
+    new StopwatchTest().testTimeStream()
   }
 }
