@@ -53,7 +53,7 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.19.1</version>
                 <configuration>
-                    <groups>io.citrine.tbone.SlowTest</groups>
+                    <groups>io.citrine.theta.SlowTest</groups>
                     <includes>
                         <include>**/*Test.java</include>
                     </includes>
