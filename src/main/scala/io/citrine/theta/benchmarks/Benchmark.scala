@@ -14,7 +14,7 @@ trait Benchmark {
     * @return the benchmark time (in seconds)
     */
   def run(): Double = {
-    Stopwatch.time(kernel(), benchmark = "None", nWarm = 16, nTrial = 16)
+    Stopwatch.time(kernel(), benchmark = "None", nWarm = 16, nTrial = 8)
   }
 
   /**
