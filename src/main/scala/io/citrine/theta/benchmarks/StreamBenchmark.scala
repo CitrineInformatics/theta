@@ -20,7 +20,7 @@ object StreamBenchmark extends Benchmark {
       b(i) = 0.5
       c(i) = 0.0
     }
-    Stopwatch.time({customKernel(a, b, c, Random.nextDouble())}, benchmark = "None", nWarm = 8, nTrial = 32)
+    Stopwatch.time({customKernel(a, b, c, Random.nextDouble())}, benchmark = "None", nWarm = 2, nTrial = 8)
   }
 
   /**
@@ -30,7 +30,7 @@ object StreamBenchmark extends Benchmark {
     a.indices.foreach(i => c(i) = a(i) )
     a.indices.foreach(i => b(i) = scalar * c(i) )
     a.indices.foreach(i => c(i) = a(i) + c(i) )
-    a.indices.foreach(i => a(i) = b(i) + scalar*c(i) )
+    a.indices.foreach(i => a(i) = b(i) + scalar * c(i) )
   }
 
   /**
