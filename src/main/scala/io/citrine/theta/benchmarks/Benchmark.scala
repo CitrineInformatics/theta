@@ -21,4 +21,10 @@ trait Benchmark {
     * Workload that will be timed for the benchmark
     */
   def kernel(): Unit
+
+  /**
+    * Get the number of event counts represented by this benchmark
+    * @return number of events benchmarked
+    */
+  def getCount(): Long = 1L
 }

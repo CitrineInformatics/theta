@@ -8,12 +8,16 @@ import scala.util.Random
   */
 object RandomGenerationBenchmark extends Benchmark {
 
+  val N: Long = 1048576L
+
   /**
     * Generate 2^20 random numbers using Scala.Random.nextDouble()
     */
   override def kernel(): Unit = {
-    (0 until 1048576).foreach{i =>
+    (0 until N.toInt).foreach{i =>
       Random.nextDouble()
     }
   }
+
+  override def getCount(): Long = N
 }
