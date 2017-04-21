@@ -35,6 +35,21 @@ object BenchmarkRegistry {
   }
 
   /**
+    * Get the event count associated with the benchmark
+    * @param name of the benchmark
+    * @return numer of events that were benchmarked
+    */
+  def getCount(name: String): Long = {
+    if (name == "None") return 1L
+    if (name == "Default") return getCount(default)
+
+    benchmarks.get(name) match {
+      case None => throw new IllegalArgumentException()
+      case Some(bm) => bm.getCount()
+    }
+  }
+
+  /**
     * Register a benchmark in the registry
     * @param name of the benchmark
     * @param bm object to register
