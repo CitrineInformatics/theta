@@ -6,7 +6,9 @@ package io.citrine.theta
 class Profiler(name: String, benchmark: String = "Default", nWarm: Int = 2, nTrial: Int = 4) {
 
   def profile[R](block: Counter => R): ProfilerReport = {
-    (0 until nWarm).foreach(i => block)
+    (0 until nWarm).foreach{i =>
+      block(new Counter())
+    }
     val start = System.nanoTime()
     var counter = new Counter()
     (0 until nTrial).foreach{i =>
