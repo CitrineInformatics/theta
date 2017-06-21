@@ -37,4 +37,6 @@ object StreamBenchmark extends Benchmark {
     * Unused
     */
   override def kernel(): Unit = {}
+
+  override def getCount(): Long = 10L * N
 }
