@@ -6,7 +6,7 @@
 
     <groupId>io.citrine</groupId>
     <artifactId>theta</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -190,6 +190,22 @@
             </snapshots>
         </repository>
     </repositories>
+
+    <distributionManagement>
+        <site>
+            <id>s3.site</id>
+            <url>s3://citrine-maven/site</url>
+        </site>
+        <repository>
+            <id>s3.release</id>
+            <url>s3://citrine-maven/release</url>
+        </repository>
+        <snapshotRepository>
+            <id>s3.snapshot</id>
+            <url>s3://citrine-maven/snapshot</url>
+        </snapshotRepository>
+    </distributionManagement>
+
 
     <pluginRepositories>
         <pluginRepository>
