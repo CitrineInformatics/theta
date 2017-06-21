@@ -24,8 +24,8 @@ class BenchmarkRegistryTest {
   def testConsistency(): Unit = {
     (0 until 32).foreach{ i =>
       val theta: Double = Stopwatch.time(RandomGenerationBenchmark.kernel(), benchmark = "RandomGeneration")
-      assert(theta < 1.4, s"RandomGeneration benchmark inconsistent (too slow ${theta})")
-      assert(theta > 0.6, s"RandomGeneration benchmark inconsistent (too fast ${theta})")
+      assert(theta < 1.4, s"RandomGeneration benchmark inconsistent (too slow ${theta}) (after ${i})")
+      assert(theta > 0.6, s"RandomGeneration benchmark inconsistent (too fast ${theta}) (after ${i})")
     }
 
   }
