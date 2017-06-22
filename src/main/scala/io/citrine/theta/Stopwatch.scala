@@ -31,9 +31,8 @@ object Stopwatch {
 
       /* Compute mean and variance */
       val sumTime = times.sum
-      val sumSq = times.map(x => x * x).sum
       mean = sumTime / times.size
-      val variance = sumSq / times.size - mean * mean
+      val variance = times.map(t => t - mean).map(t => t * t).sum / times.size
 
       /* Estimate the uncertainty in the mean */
       errorEstimate = Math.sqrt(variance / times.size) / mean
