@@ -26,7 +26,7 @@ object Stopwatch {
       val thisTime: Double = System.nanoTime() - start
 
       times.append(thisTime) // add a new time
-      if (iteration % 4 == 3) times.remove(0) // wipe out an old time every 4 iterations
+      if (iteration % 4 == 3) times.remove(times.indexOf(times.max)) // wipe out an slow time every 4 iterations
       iteration = iteration + 1
 
       /* Compute mean and variance */
