@@ -20,7 +20,7 @@ object StreamBenchmark extends Benchmark {
       b(i) = 0.5
       c(i) = 0.0
     }
-    Stopwatch.time({customKernel(a, b, c, Random.nextDouble())}, benchmark = "None", nWarm = 2, nTrial = 8)
+    Stopwatch.time({customKernel(a, b, c, Random.nextDouble())}, benchmark = "None")
   }
 
   /**
