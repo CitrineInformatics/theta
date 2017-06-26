@@ -10,11 +10,11 @@ object Stopwatch {
     * @return the non-dimensional time of the block
     */
   def time[R](block: => R, benchmark: String = "Default",
-              minRun: Int = 4, maxRun: Int = 128, targetError: Double = 0.05): Double = {
+              minRun: Int = 8, maxRun: Int = 64, targetError: Double = 0.01): Double = {
     wallclock(block, minRun, maxRun, targetError) / BenchmarkRegistry.getTime(benchmark)
   }
 
-  private[theta] def wallclock[R](block: => R, minRun: Int = 4, maxRun: Int = 128, targetError: Double = 0.05): Double = {
+  private[theta] def wallclock[R](block: => R, minRun: Int = 8, maxRun: Int = 64, targetError: Double = 0.01): Double = {
     val minRunActual = Math.max(minRun, 4)
     val times = mutable.ListBuffer.empty[Double]
     var iteration = 0
