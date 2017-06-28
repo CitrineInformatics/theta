@@ -68,7 +68,7 @@ object BenchmarkRegistry {
   /** Map from name to benchmark object */
   val benchmarks: mutable.Map[String, Benchmark] = mutable.HashMap()
   register("RandomGeneration", RandomGenerationBenchmark)
-  register("STREAM", StreamBenchmark)
+  register("STREAM", new StreamBenchmark())
 
   /** Map from name to benchmark time */
   val times: mutable.Map[String, Double] = mutable.HashMap()

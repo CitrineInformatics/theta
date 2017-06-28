@@ -33,14 +33,13 @@ class ProfilerTest {
     */
   @Test
   def testTimeStream(): Unit = {
-    val a: Array[Double] = new Array[Double](StreamBenchmark.N)
-    val b: Array[Double] = new Array[Double](StreamBenchmark.N)
-    val c: Array[Double] = new Array[Double](StreamBenchmark.N)
-
+    val benchmark = new StreamBenchmark()
+    benchmark.setup()
     val report = new Profiler("test", benchmark = "STREAM").profile{counter: Counter =>
-      StreamBenchmark.customKernel(a, b, c, Random.nextDouble())
-      counter.count(StreamBenchmark.getCount())
+      benchmark.kernel()
+      counter.count(benchmark.getCount())
     }
+    benchmark.teardown()
 
     assert(report.getTheta() < 1.2, s"STREAM benchmark inconsistent (too slow ${report.getTheta()})")
     assert(report.getTheta() > 0.8, s"STREAM benchmark inconsistent (too fast ${report.getTheta()})")
