@@ -14,7 +14,10 @@ trait Benchmark {
     * @return the benchmark time (in seconds)
     */
   def run(): Double = {
-    Stopwatch.time(kernel(), benchmark = "None")
+    setup()
+    val result = Stopwatch.time(kernel(), benchmark = "None")
+    teardown()
+    result
   }
 
   /**
@@ -27,4 +30,14 @@ trait Benchmark {
     * @return number of events benchmarked
     */
   def getCount(): Long = 1L
+
+  /**
+    * Setup the benchmark, allocating test data for example
+    */
+  def setup(): Unit = {}
+
+  /**
+    * Tear down the benchmark, freeing test data for example
+    */
+  def teardown(): Unit = {}
 }
