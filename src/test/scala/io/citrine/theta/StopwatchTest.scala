@@ -26,11 +26,10 @@ class StopwatchTest {
     */
   @Test
   def testTimeStream(): Unit = {
-    val a: Array[Double] = new Array[Double](StreamBenchmark.N)
-    val b: Array[Double] = new Array[Double](StreamBenchmark.N)
-    val c: Array[Double] = new Array[Double](StreamBenchmark.N)
-
-    val theta: Double = Stopwatch.time({StreamBenchmark.customKernel(a, b, c, Random.nextDouble())}, benchmark = "STREAM")
+    val benchmark = new StreamBenchmark()
+    benchmark.setup()
+    val theta: Double = Stopwatch.time({benchmark.kernel()}, benchmark = "STREAM")
+    benchmark.teardown()
     assert(theta < 1.2, s"STREAM benchmark inconsistent (too slow ${theta})")
     assert(theta > 0.8, s"STREAM benchmark inconsistent (too fast ${theta})")
   }

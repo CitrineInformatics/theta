@@ -34,20 +34,14 @@ class BenchmarkRegistryTest {
   @Test
   @Category(Array(classOf[SlowTest]))
   def testConsistencyStream(): Unit = {
-    val N = StreamBenchmark.N
-    val a = new Array[Double](N)
-    val b = new Array[Double](N)
-    val c = new Array[Double](N)
-    (0 until N).foreach{i =>
-      a(i) = 2.0
-      b(i) = 0.5
-      c(i) = 0.0
-    }
+    val benchmark = new StreamBenchmark()
+    benchmark.setup()
     (0 until 8).foreach{ i =>
-      val theta: Double = Stopwatch.time(StreamBenchmark.customKernel(a, b, c, Random.nextDouble()), benchmark = "STREAM")
-      assert(theta < 1.1, s"RandomGeneration benchmark inconsistent (too slow ${theta})")
-      assert(theta > 0.9, s"RandomGeneration benchmark inconsistent (too fast ${theta})")
+      val theta: Double = Stopwatch.time(benchmark.kernel(), benchmark = "STREAM")
+      assert(theta < 1.1, s"STREAM benchmark inconsistent (too slow ${theta})")
+      assert(theta > 0.9, s"STREAM benchmark inconsistent (too fast ${theta})")
     }
+    benchmark.teardown()
   }
 }
 
