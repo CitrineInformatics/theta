@@ -1,5 +1,7 @@
 package io.citrine.theta
 
+import org.apache.commons.math3.distribution.TDistribution
+
 import scala.collection.mutable
 
 object Stopwatch {
@@ -10,11 +12,18 @@ object Stopwatch {
     * @return the non-dimensional time of the block
     */
   def time[R](block: => R, benchmark: String = "Default",
-              minRun: Int = 8, maxRun: Int = 64, targetError: Double = 0.01): Double = {
-    wallclock(block, minRun, maxRun, targetError) / BenchmarkRegistry.getTime(benchmark)
+              minRun: Int = 4, maxRun: Int = 64,
+              targetError: Double = 0.05, confidence: Double = 0.95): Double = {
+    wallclock(block, minRun, maxRun, targetError, confidence) / BenchmarkRegistry.getTime(benchmark)
   }
 
-  private[theta] def wallclock[R](block: => R, minRun: Int = 8, maxRun: Int = 64, targetError: Double = 0.01): Double = {
+  private[theta] def wallclock[R](
+                                   block: => R,
+                                   minRun: Int = 4,
+                                   maxRun: Int = 64,
+                                   targetError: Double = 0.05,
+                                   confidence: Double = 0.95
+                                 ): Double = {
     val minRunActual = Math.max(minRun, 4)
     val times = mutable.ListBuffer.empty[Double]
     var iteration = 0
@@ -35,8 +44,14 @@ object Stopwatch {
       val variance = times.map(t => t - mean).map(t => t * t).sum / times.size
 
       /* Estimate the uncertainty in the mean */
-      errorEstimate = Math.sqrt(variance / times.size) / mean
+      errorEstimate = if (times.size > 1) {
+        val dist = new TDistribution(times.size - 1)
+        dist.inverseCumulativeProbability(1.0 - (1.0 - confidence)/2.0) * Math.sqrt(variance / times.size) / mean
+      } else {
+        Double.MaxValue
+      }
     }
+    // println(s"FYI: took ${iteration} iterations to converge")
     mean * 1.0e-9 // convert to seconds
   }
 }
