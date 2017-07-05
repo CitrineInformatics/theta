@@ -45,8 +45,15 @@ object Stopwatch {
 
       /* Estimate the uncertainty in the mean */
       errorEstimate = if (times.size > 1) {
+        // We have a small number of samples, so the distribution will be a student's T distribution
         val dist = new TDistribution(times.size - 1)
-        dist.inverseCumulativeProbability(1.0 - (1.0 - confidence)/2.0) * Math.sqrt(variance / times.size) / mean
+        // Where on the t-distribution do we achieve the desired level of confidence?
+        val x = dist.inverseCumulativeProbability(1.0 - (1.0 - confidence)/2.0)
+        // Convert from the position in the t-distribution to the uncertainty in the mean,
+        // relative to the estimate of the mean
+        // Note that we're dividing the uncertainty in the mean by the estimated, not true, mean
+        // That adds a second order correction that we're ignoring here
+        x * Math.sqrt(variance / times.size) / mean
       } else {
         Double.MaxValue
       }
