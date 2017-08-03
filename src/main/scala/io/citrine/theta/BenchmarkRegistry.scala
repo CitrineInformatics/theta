@@ -1,6 +1,6 @@
 package io.citrine.theta
 
-import io.citrine.theta.benchmarks.{Benchmark, MatrixInversionBenchmark, RandomGenerationBenchmark, StreamBenchmark}
+import io.citrine.theta.benchmarks.{Benchmark, RandomGenerationBenchmark, StreamBenchmark}
 
 import scala.collection.mutable
 
@@ -69,7 +69,6 @@ object BenchmarkRegistry {
   val benchmarks: mutable.Map[String, Benchmark] = mutable.HashMap()
   register("RandomGeneration", RandomGenerationBenchmark)
   register("STREAM", new StreamBenchmark())
-  register("MatInv", new MatrixInversionBenchmark())
 
   /** Map from name to benchmark time */
   val times: mutable.Map[String, Double] = mutable.HashMap()

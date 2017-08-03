@@ -25,7 +25,7 @@ object Stopwatch {
                                    confidence: Double = 0.95
                                  ): Double = {
     val minRunActual = Math.max(minRun, 4)
-    var times = mutable.ArrayBuffer.empty[Double]
+    val times = mutable.ListBuffer.empty[Double]
     var iteration = 0
     var errorEstimate: Double = Double.MaxValue
     var mean: Double = 0.0
@@ -35,34 +35,27 @@ object Stopwatch {
       val thisTime: Double = System.nanoTime() - start
 
       times.append(thisTime) // add a new time
-      times = times.sorted
-      println(times)
-      // if (iteration % 4 == 3) times.remove(times.indexOf(times.max)) // wipe out an slow time every 4 iterations
+      if (iteration % 4 == 3) times.remove(times.indexOf(times.max)) // wipe out an slow time every 4 iterations
       iteration = iteration + 1
-      val count: Int = Math.ceil(iteration.toDouble * 0.8).toInt
 
       /* Compute mean and variance */
-      val sumTime = times.take(count).sum
-      mean = sumTime / count
-      val variance = times.take(count).map(t => t - mean).map(t => t * t).sum / count
+      val sumTime = times.sum
+      mean = sumTime / times.size
+      val variance = times.map(t => t - mean).map(t => t * t).sum / times.size
 
       /* Estimate the uncertainty in the mean */
-      errorEstimate = if (count > 1) {
+      errorEstimate = if (times.size > 1) {
         // We have a small number of samples, so the distribution will be a student's T distribution
-        val dist = new TDistribution(count - 1)
+        val dist = new TDistribution(times.size - 1)
         // Where on the t-distribution do we achieve the desired level of confidence?
-        val x = dist.inverseCumulativeProbability(1.0 - (1.0 - confidence) / 2.0)
+        val x = dist.inverseCumulativeProbability(1.0 - (1.0 - confidence)/2.0)
         // Convert from the position in the t-distribution to the uncertainty in the mean,
         // relative to the estimate of the mean
         // Note that we're dividing the uncertainty in the mean by the estimated, not true, mean
         // That adds a second order correction that we're ignoring here
-        x * Math.sqrt(variance / count) / mean
+        x * Math.sqrt(variance / times.size) / mean
       } else {
         Double.MaxValue
-      }
-      println(s"Error at iteration ${iteration} is ${errorEstimate}")
-      if (iteration == maxRun - 1) {
-        println(times.sorted)
       }
     }
     // println(s"FYI: took ${iteration} iterations to converge")
