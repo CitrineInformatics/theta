@@ -1,6 +1,6 @@
 package io.citrine.theta
 
-import io.citrine.theta.benchmarks.{RandomGenerationBenchmark, StreamBenchmark}
+import io.citrine.theta.benchmarks.{MatrixInversionBenchmark, RandomGenerationBenchmark, StreamBenchmark}
 import org.junit.Test
 import org.junit.experimental.categories.Category
 
@@ -43,10 +43,23 @@ class BenchmarkRegistryTest {
     }
     benchmark.teardown()
   }
+
+  @Test
+  @Category(Array(classOf[SlowTest]))
+  def testConsistencyMatInv(): Unit = {
+    val benchmark = new MatrixInversionBenchmark()
+    benchmark.setup()
+    (0 until 8).foreach{ i =>
+      val theta: Double = Stopwatch.time(benchmark.kernel(), benchmark = "MatInv", targetError = 0.01)
+      assert(theta < 1.1, s"MatInv benchmark inconsistent (too slow on it ${i} (${theta}))")
+      assert(theta > 0.9, s"MatInv benchmark inconsistent (too fast on it ${i} (${theta}))")
+    }
+    benchmark.teardown()
+  }
 }
 
 object BenchmarkRegistryTest {
   def main(argv: Array[String]): Unit = {
-    new BenchmarkRegistryTest().testConsistencyStream()
+    new BenchmarkRegistryTest().testConsistencyMatInv()
   }
 }
