@@ -26,11 +26,12 @@ object BenchmarkRegistry {
         benchmarks.get(name) match {
           case None => throw new IllegalArgumentException("Unknown benchmark name")
           case Some(bmb) =>
-            val bm = bmb.build()
-            bm.run()
-            val time = bm.run()
-            times(name) = time
-            time
+            synchronized {
+              val bm = bmb.build()
+              val time = bm.run()
+              times(name) = time
+              time
+            }
         }
     }
   }
