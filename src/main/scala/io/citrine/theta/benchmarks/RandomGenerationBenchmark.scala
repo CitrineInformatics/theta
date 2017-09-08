@@ -6,7 +6,7 @@ import scala.util.Random
   * Benchmark that generates random numbers
   * Created by maxhutch on 3/29/17.
   */
-object RandomGenerationBenchmark extends Benchmark {
+class RandomGenerationBenchmark() extends Benchmark {
 
   val N: Long = 8 * 1048576L
 
@@ -20,4 +20,8 @@ object RandomGenerationBenchmark extends Benchmark {
   }
 
   override def getCount(): Long = N
+}
+
+object RandomGenerationBenchmark extends BenchmarkBuilder {
+  override def build(): Benchmark = new RandomGenerationBenchmark()
 }

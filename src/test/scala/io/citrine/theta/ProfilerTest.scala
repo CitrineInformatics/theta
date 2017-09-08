@@ -16,9 +16,10 @@ class ProfilerTest {
     */
   @Test
   def testTimeDefault(): Unit = {
+    val bm = new RandomGenerationBenchmark()
     val report = new Profiler("test", benchmark = "RandomGeneration").profile{c: Counter =>
-      RandomGenerationBenchmark.kernel()
-      c.count(RandomGenerationBenchmark.getCount())
+      bm.kernel()
+      c.count(bm.getCount())
     }
 
     assert(report.getTheta() < 1.2, s"RandomGeneration benchmark inconsistent (too slow ${report.getTheta()})")

@@ -1,6 +1,6 @@
 package io.citrine.theta
 
-import io.citrine.theta.benchmarks.{Benchmark, RandomGenerationBenchmark, StreamBenchmark}
+import io.citrine.theta.benchmarks.{BenchmarkBuilder, RandomGenerationBenchmark, StreamBenchmark}
 
 import scala.collection.mutable
 
@@ -25,11 +25,13 @@ object BenchmarkRegistry {
       case None =>
         benchmarks.get(name) match {
           case None => throw new IllegalArgumentException("Unknown benchmark name")
-          case Some(bm) =>
-            bm.run()
-            val time = bm.run()
-            times(name) = time
-            time
+          case Some(bmb) =>
+            synchronized {
+              val bm = bmb.build()
+              val time = bm.run()
+              times(name) = time
+              time
+            }
         }
     }
   }
@@ -45,7 +47,7 @@ object BenchmarkRegistry {
 
     benchmarks.get(name) match {
       case None => throw new IllegalArgumentException()
-      case Some(bm) => bm.getCount()
+      case Some(bmb) => bmb.build().getCount()
     }
   }
 
@@ -54,7 +56,7 @@ object BenchmarkRegistry {
     * @param name of the benchmark
     * @param bm object to register
     */
-  def register(name: String, bm: Benchmark): Unit = {
+  def register(name: String, bm: BenchmarkBuilder): Unit = {
     benchmarks(name) = bm
   }
 
@@ -66,9 +68,9 @@ object BenchmarkRegistry {
   }
 
   /** Map from name to benchmark object */
-  val benchmarks: mutable.Map[String, Benchmark] = mutable.HashMap()
+  val benchmarks: mutable.Map[String, BenchmarkBuilder] = mutable.HashMap()
   register("RandomGeneration", RandomGenerationBenchmark)
-  register("STREAM", new StreamBenchmark())
+  register("STREAM", StreamBenchmark)
 
   /** Map from name to benchmark time */
   val times: mutable.Map[String, Double] = mutable.HashMap()

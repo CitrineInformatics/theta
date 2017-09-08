@@ -16,7 +16,7 @@ class StopwatchTest {
     */
   @Test
   def testTimeDefault(): Unit = {
-    val theta: Double = Stopwatch.time(RandomGenerationBenchmark.kernel(), benchmark = "RandomGeneration")
+    val theta: Double = Stopwatch.time(new RandomGenerationBenchmark().kernel(), benchmark = "RandomGeneration")
     assert(theta < 1.2, s"RandomGeneration benchmark inconsistent (too slow ${theta})")
     assert(theta > 0.8, s"RandomGeneration benchmark inconsistent (too fast ${theta})")
   }

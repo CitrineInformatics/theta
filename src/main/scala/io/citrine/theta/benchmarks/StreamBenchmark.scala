@@ -44,3 +44,7 @@ class StreamBenchmark() extends Benchmark {
 
   override def getCount(): Long = 10L * N
 }
+
+object StreamBenchmark extends BenchmarkBuilder {
+  override def build(): Benchmark = new StreamBenchmark()
+}
