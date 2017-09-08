@@ -41,3 +41,7 @@ trait Benchmark {
     */
   def teardown(): Unit = {}
 }
+
+trait BenchmarkBuilder {
+  def build(): Benchmark
+}
