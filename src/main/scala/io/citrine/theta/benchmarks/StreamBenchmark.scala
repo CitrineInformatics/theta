@@ -7,7 +7,7 @@ import scala.util.Random
   * Created by maxhutch on 3/29/17.
   */
 class StreamBenchmark() extends Benchmark {
-  val N: Int = 33554432
+  val N: Int = 16777216
 
   var a: Array[Double] = Array()
   var b: Array[Double] = Array()

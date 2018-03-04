@@ -86,7 +86,6 @@
                 <version>2.19.1</version>
                 <configuration>
                     <excludedGroups>io.citrine.theta.SlowTest</excludedGroups>
-                    <argLine>-Xmx4096m</argLine>
                 </configuration>
             </plugin>
             <plugin>
