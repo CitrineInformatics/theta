@@ -24,12 +24,15 @@ object Stopwatch {
                                    targetError: Double = 0.05,
                                    confidence: Double = 0.95
                                  ): Double = {
-    val minRunActual = Math.max(minRun, 4)
+    if (minRun < 4) {
+      throw new IllegalArgumentException(s"A minimum of 4 runs are required to establish bounds with meaningful confidence. Only $minRun were requested.")
+    }
+
     val times = mutable.ListBuffer.empty[Double]
     var iteration = 0
     var errorEstimate: Double = Double.MaxValue
     var mean: Double = 0.0
-    while ((errorEstimate > targetError || iteration < minRunActual) && iteration < maxRun) {
+    while ((errorEstimate > targetError || iteration < minRun) && iteration < maxRun) {
       val start = System.nanoTime()
       block
       val thisTime: Double = System.nanoTime() - start
@@ -48,7 +51,7 @@ object Stopwatch {
         // We have a small number of samples, so the distribution will be a student's T distribution
         val dist = new TDistribution(times.size - 1)
         // Where on the t-distribution do we achieve the desired level of confidence?
-        val x = dist.inverseCumulativeProbability(1.0 - (1.0 - confidence)/2.0)
+        val x = dist.inverseCumulativeProbability(1.0 - (1.0 - confidence) / 2.0)
         // Convert from the position in the t-distribution to the uncertainty in the mean,
         // relative to the estimate of the mean
         // Note that we're dividing the uncertainty in the mean by the estimated, not true, mean
