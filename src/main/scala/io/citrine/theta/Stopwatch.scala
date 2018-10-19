@@ -58,7 +58,6 @@ object Stopwatch {
         Double.MaxValue
       }
     }
-    // println(s"FYI: took ${iteration} iterations to converge")
     mean * 1.0e-9 // convert to seconds
   }
 }
