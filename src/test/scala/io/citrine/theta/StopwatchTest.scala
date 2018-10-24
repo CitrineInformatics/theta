@@ -40,7 +40,7 @@ class StopwatchTest {
   @Test
   def testIsNotSlowerThanAnEqualTime(): Unit = {
     val b = new RandomSleepBenchmark()
-    val equalTime = b.mean
+    val equalTime = b.mean / 1000
     assert(
       !Stopwatch.isSlowerThan(b.kernel(), equalTime, minimumTimeDifference = Some(b.std / 1000)), "Unable to determine a benchmark is not slower than the known average execution time."
     )
