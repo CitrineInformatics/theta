@@ -30,7 +30,7 @@ object Stopwatch {
     }
 
     val times = mutable.ListBuffer.empty[Double]
-    var iteration = 0
+    var iteration: Int = 0
     var errorEstimate: Double = Double.MaxValue
     var mean: Double = 0.0
     while ((errorEstimate > targetError || iteration < minRun) && iteration < maxRun) {
