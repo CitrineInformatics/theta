@@ -38,6 +38,18 @@ class StopwatchTest {
     * Test that the stopwatch can detect whether a benchmark with a known execution time is slower (or faster) than a specified time.
     */
   @Test
+  def testIsNotSlowerThanAnEqualTime(): Unit = {
+    val b = new RandomSleepBenchmark()
+    val equalTime = b.mean
+    assert(
+      !Stopwatch.isSlowerThan(b.kernel(), equalTime, minimumTimeDifference = Some(b.std / 1000)), "Unable to determine a benchmark is not slower than the known average execution time."
+    )
+  }
+
+  /**
+    * Test that the stopwatch can detect whether a benchmark with a known execution time is slower (or faster) than a specified time.
+    */
+  @Test
   def testIsSlowerThan(): Unit = {
     val b = new RandomSleepBenchmark()
     val effectSizes = Seq(0.5, 0.8) // test medium and large effect sizes

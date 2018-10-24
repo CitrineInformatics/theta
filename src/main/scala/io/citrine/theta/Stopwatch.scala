@@ -68,30 +68,33 @@ object Stopwatch {
   /**
     * Test whether a function is slower than the specified time.
     *
-    * @param block                to time
-    * @param time                 Critical time to test whether the block is slower than
-    * @param minRun               Minimum number of runs to perform testing the runtime
-    * @param maxRun               Maximum number of runs to perform. If this number is reached, a runtime exception is
-    *                             thrown because the null hypothesis could not be tested at the specified
-    *                             false positive and false negative rates. In which case, either the maximum number
-    *                             of runs should be increased or the FP/FN rates should be relaxed.
-    * @param acceptableEffectSize If defined, the test will exit if the effect size exceeds this value.
-    *                             Large, medium and small effects are given by 0.8, 0.5 and 0.2, respectively.
-    *                             Units are defined in terms of standard deviations of the mean. The effect size
-    *                             is directional. If positive, the test will exit early if the mean execution time
-    *                             is clearly slower than the given `time`. If negative, the test will exit early if
-    *                             the execution time is clearly faster than the specified time. Note, however,
-    *                             that ''clearly'' in this context is defined by the effect size you specify.
-    * @param falsePositive        False positive rate. (Also known as the probability of observing a Type I error.)
-    * @param falseNegative        False negative rate. (Also known as the probability of observing a Type II error.)
+    * @param block                 to time
+    * @param time                  Critical time (in seconds) to test whether the block is slower than
+    * @param minRun                Minimum number of runs to perform testing the runtime
+    * @param maxRun                Maximum number of runs to perform. If this number is reached, a runtime exception is
+    * @param falsePositive         False positive rate. (Also known as the probability of observing a Type I error.)
+    * @param falseNegative         False negative rate. (Also known as the probability of observing a Type II error.)
+    *                              thrown because the null hypothesis could not be tested at the specified
+    *                              false positive and false negative rates. In which case, either the maximum number
+    *                              of runs should be increased or the FP/FN rates should be relaxed.
+    * @param acceptableEffectSize  If defined, the test will exit if the effect size exceeds this value.
+    *                              Large, medium and small effects are given by 0.8, 0.5 and 0.2, respectively.
+    *                              Units are defined in terms of standard deviations of the mean. The effect size
+    *                              is directional. If positive, the test will exit early if the mean execution time
+    *                              is clearly slower than the given `time`. If negative, the test will exit early if
+    *                              the execution time is clearly faster than the specified time. Note, however,
+    *                              that ''clearly'' in this context is defined by the effect size you specify.
+    * @param minimumTimeDifference Minimum time difference (in seconds) required to conclude the runtime is slower
+    *                              than the specified time.
     * @tparam R Return type of the execution block
     * @return Whether the function block is faster than the specified time.
     */
   def isSlowerThan[R](
                        block: => R, time: Double,
                        minRun: Int = 4, maxRun: Int = 64,
+                       falsePositive: Double = 0.05, falseNegative: Double = 0.20,
                        acceptableEffectSize: Option[Double] = None,
-                       falsePositive: Double = 0.05, falseNegative: Double = 0.20
+                       minimumTimeDifference: Option[Double] = None
                      ): Boolean = {
     validateInputs(minRun, maxRun, falsePositive, falseNegative)
 
@@ -112,7 +115,8 @@ object Stopwatch {
         val tDist = new TDistribution(sampleSize - 1)
         val tAlpha = tDist.inverseCumulativeProbability(falsePositive)
         val tBeta = tDist.inverseCumulativeProbability(falseNegative)
-        val tRequiredSampleSize = Math.pow(sampleStd * (tAlpha + tBeta) / (sampleMean - time), 2)
+        val delta = minimumTimeDifference.getOrElse(sampleMean - time)
+        val tRequiredSampleSize = Math.pow(sampleStd * (tAlpha + tBeta) / delta, 2)
 
         // Do we have enough samples to test the hypothesis at the requested FP/FN rates?
         if (sampleSize >= tRequiredSampleSize) {
