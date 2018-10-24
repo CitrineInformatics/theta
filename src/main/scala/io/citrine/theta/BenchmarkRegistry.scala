@@ -39,7 +39,7 @@ object BenchmarkRegistry {
   /**
     * Get the event count associated with the benchmark
     * @param name of the benchmark
-    * @return numer of events that were benchmarked
+    * @return number of events that were benchmarked
     */
   def getCount(name: String): Long = {
     if (name == "None") return 1L
