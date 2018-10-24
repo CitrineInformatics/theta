@@ -3,6 +3,7 @@ package io.citrine.theta
 import org.apache.commons.math3.distribution.TDistribution
 
 import scala.collection.mutable
+import scala.collection.mutable.ListBuffer
 
 object Stopwatch {
   /**
