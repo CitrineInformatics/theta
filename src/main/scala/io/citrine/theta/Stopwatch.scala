@@ -131,8 +131,7 @@ object Stopwatch {
         }
       }
     }
-    throw new RuntimeException("Unable reach statistically significant result with " +
-      s"false positive rate = $falsePositive, false negative rate = $falseNegative and maximum number of iterations = $maxRun")
+    false // Results are not statistically significant. Cannot reject null hypothesis that execution time == `time`.
   }
 
   /** Checks that the user input sensible parameter values */
