@@ -40,7 +40,7 @@ object Stopwatch {
 
       times.append(thisTime) // add a new time
       if (iteration % 4 == 3) times.remove(times.indexOf(times.max)) // wipe out an slow time every 4 iterations
-      iteration = iteration + 1
+      iteration += 1
 
       /* Compute mean and variance */
       val sumTime = times.sum
