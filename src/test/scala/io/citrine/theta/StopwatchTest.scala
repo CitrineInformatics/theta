@@ -46,7 +46,6 @@ class StopwatchTest {
     )
   }
 
-
   /**
     * Test that the stopwatch can detect whether a benchmark with a known execution time is slower (or faster) than a specified time.
     */
@@ -59,6 +58,12 @@ class StopwatchTest {
     )
     assert(
       Stopwatch.isSlowerThan(b.kernel(), fasterTime, minimumTimeDifference = 2 * b.std / 1000), "Unable to determine a benchmark is not slower than the known average execution time."
+    )
+
+    // check that minimum time difference does not affect the calculation when the sample mean is less than the hypothesized mean
+    val slowerTime = (b.mean + 3 * b.std) / 1000
+    assert(
+      !Stopwatch.isSlowerThan(b.kernel(), slowerTime, minimumTimeDifference = 10 * b.std / 1000), "Unable to determine a benchmark is not slower than the known average execution time."
     )
   }
 
