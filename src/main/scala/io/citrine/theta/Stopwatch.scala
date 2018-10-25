@@ -77,6 +77,8 @@ object Stopwatch {
     *                              thrown because the null hypothesis could not be tested at the specified
     *                              false positive and false negative rates. In which case, either the maximum number
     *                              of runs should be increased or the FP/FN rates should be relaxed.
+    * @param minimumTimeDifference Minimum time difference (in seconds) required to conclude the runtime is slower
+    *                              than the specified time.
     * @param acceptableEffectSize  If defined, the test will exit if the effect size exceeds this value.
     *                              Large, medium and small effects are given by 0.8, 0.5 and 0.2, respectively.
     *                              Units are defined in terms of standard deviations of the mean. The effect size
@@ -84,8 +86,6 @@ object Stopwatch {
     *                              is clearly slower than the given `time`. If negative, the test will exit early if
     *                              the execution time is clearly faster than the specified time. Note, however,
     *                              that ''clearly'' in this context is defined by the effect size you specify.
-    * @param minimumTimeDifference Minimum time difference (in seconds) required to conclude the runtime is slower
-    *                              than the specified time.
     * @tparam R Return type of the execution block
     * @return Whether the function block is faster than the specified time.
     */
@@ -93,8 +93,8 @@ object Stopwatch {
                        block: => R, time: Double,
                        minRun: Int = 4, maxRun: Int = 64,
                        falsePositive: Double = 0.05, falseNegative: Double = 0.20,
-                       acceptableEffectSize: Option[Double] = None,
-                       minimumTimeDifference: Option[Double] = None
+                       minimumTimeDifference: Double = 0.0,
+                       acceptableEffectSize: Option[Double] = None
                      ): Boolean = {
     validateInputs(minRun, maxRun, falsePositive, falseNegative)
 
@@ -115,7 +115,7 @@ object Stopwatch {
         val tDist = new TDistribution(sampleSize - 1)
         val tAlpha = tDist.inverseCumulativeProbability(falsePositive)
         val tBeta = tDist.inverseCumulativeProbability(falseNegative)
-        val delta = minimumTimeDifference.getOrElse(sampleMean - time)
+        val delta = sampleMean - time - minimumTimeDifference
         val tRequiredSampleSize = Math.pow(sampleStd * (tAlpha + tBeta) / delta, 2)
 
         // Do we have enough samples to test the hypothesis at the requested FP/FN rates?
