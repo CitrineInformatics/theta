@@ -47,18 +47,20 @@ class StopwatchTest {
   }
 
 
-//  /**
-//    * Test that the stopwatch can detect whether a benchmark with a known execution time is slower (or faster) than a specified time.
-//    */
-//  @Test
-//  def testIsSlowerThanMinimumTimeDifference(): Unit = {
-//    val b = new RandomSleepBenchmark()
-//    val minimumTimeDifference = b.std /
-//    val equalTime = b.mean / 1000
-//    assert(
-//      !Stopwatch.isSlowerThan(b.kernel(), equalTime, minimumTimeDifference = b.std / 1000), "Unable to determine a benchmark is not slower than the known average execution time."
-//    )
-//  }
+  /**
+    * Test that the stopwatch can detect whether a benchmark with a known execution time is slower (or faster) than a specified time.
+    */
+  @Test
+  def testIsSlowerThanMinimumTimeDifference(): Unit = {
+    val b = new RandomSleepBenchmark()
+    val fasterTime = (b.mean - 3 * b.std) / 1000
+    assert(
+      !Stopwatch.isSlowerThan(b.kernel(), fasterTime, minimumTimeDifference = 4 * b.std / 1000), "Unable to determine a benchmark is not slower than the known average execution time."
+    )
+    assert(
+      Stopwatch.isSlowerThan(b.kernel(), fasterTime, minimumTimeDifference = 2 * b.std / 1000), "Unable to determine a benchmark is not slower than the known average execution time."
+    )
+  }
 
   /**
     * Test that the stopwatch can detect whether a benchmark with a known execution time is slower (or faster) than a specified time.
