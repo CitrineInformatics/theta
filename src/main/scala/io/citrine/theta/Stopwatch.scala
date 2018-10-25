@@ -108,7 +108,7 @@ object Stopwatch {
       iteration += 1
       val sampleSize = times.size
       if (sampleSize > 1 && iteration >= minRun) {
-        val sampleMean = calcHodgesLehmannMedian(times) // approximate mean using H-L median ()
+        val sampleMean = calcHodgesLehmannMedian(times)
         val sampleMAD = calcMAD(times)
         val sampleStd = convertMADtoStd(sampleMAD)
 
@@ -120,13 +120,12 @@ object Stopwatch {
 
         // Do we have enough samples to test the hypothesis at the requested FP/FN rates?
         if (sampleSize >= tRequiredSampleSize) {
-          val t = (sampleMean - time) / (sampleStd / Math.sqrt(sampleSize))
+          val t = delta / (sampleStd / Math.sqrt(sampleSize))
           return t > -tAlpha
         }
 
         if (acceptableEffectSize.isDefined) {
           val effectSize = calcEffectSize(sampleMean, sampleStd, time)
-          println(s"effect size = $effectSize, $acceptableEffectSize")
           if (measuredAcceptableEffectSize(effectSize, acceptableEffectSize.get)) {
             // At this point the result is not statistically significant (at least not at the FP/FN rates specified).
             // However, we've measured a large enough effect to report the findings via direct comparison.
