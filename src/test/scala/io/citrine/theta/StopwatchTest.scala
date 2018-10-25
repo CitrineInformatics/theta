@@ -74,15 +74,16 @@ class StopwatchTest {
   def testIsSlowerThan(): Unit = {
     val b = new RandomSleepBenchmark()
     val effectSizes = Seq(0.5, 0.8) // test medium and large effect sizes
+    val minimumTimeDifference = 0.2 * b.std / 1000 // must measure a small effect before rejecting null hypothesis
     effectSizes.foreach { effectSize =>
       val delta = b.std * effectSize
       val fasterTime = (b.mean - delta) / 1000
       val slowerTime = (b.mean + delta) / 1000
       assert(
-        Stopwatch.isSlowerThan(b.kernel(), fasterTime), s"Unable to determine a benchmark is slower than a known faster time with effect size $effectSize."
+        Stopwatch.isSlowerThan(b.kernel(), fasterTime, minimumTimeDifference = minimumTimeDifference), s"Unable to determine a benchmark is slower than a known faster time with effect size $effectSize."
       )
       assert(
-        !Stopwatch.isSlowerThan(b.kernel(), slowerTime), s"Unable to determine a benchmark is faster than a known slower time with effect size $effectSize."
+        !Stopwatch.isSlowerThan(b.kernel(), slowerTime, minimumTimeDifference = minimumTimeDifference), s"Unable to determine a benchmark is faster than a known slower time with effect size $effectSize."
       )
     }
   }
