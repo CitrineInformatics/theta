@@ -65,6 +65,54 @@ object Stopwatch {
     mean * 1.0e-9 // convert to seconds
   }
 
+  def isProbablyFasterThan(
+                       block: => Any,
+                       time: Double,
+                       minRun: Int = 4,
+                       maxRun: Int = 64,
+                       falsePositive: Double = 0.05,
+                       falseNegative: Double = 0.20
+                     ): Option[Boolean] = {
+    if (minRun < 2) {
+      throw new IllegalArgumentException(s"A minimum of 2 runs are required to establish bounds with meaningful confidence. Only $minRun were requested.")
+    }
+
+    val times = mutable.ListBuffer.empty[Double]
+    (0 until minRun - 1).foreach{_ =>
+      val start = System.nanoTime()
+      block
+      val thisTime: Double = (System.nanoTime() - start) * 1.0e-9
+      times.append(thisTime) // add a new time
+    }
+
+    while (times.size < maxRun){
+      val start = System.nanoTime()
+      block
+      val thisTime: Double = (System.nanoTime() - start) * 1.0e-9
+
+      times.append(thisTime) // add a new time
+
+      val sampleMean = calcHodgesLehmannMedian(times)
+      val sampleMAD = calcMAD(times)
+      val sampleStd = convertMADtoStd(sampleMAD)
+
+      val tDist = new TDistribution(times.size - 1)
+      val tAlpha = tDist.inverseCumulativeProbability(1.0 - falsePositive)
+      val tBeta = tDist.inverseCumulativeProbability(1.0 - falseNegative)
+
+      if ((time - sampleMean) / sampleStd * Math.sqrt(times.size) > tAlpha) {
+        // println(s"Positive result in ${times.size} iterations: ${time - sampleMean} / ${sampleStd} * ${Math.sqrt(times.size)} > ${tAlpha}")
+        return Some(true)
+      }
+      if ((sampleMean - time) / sampleStd * Math.sqrt(times.size) > tBeta) {
+        // println(s"Negative result in ${times.size} iterations: ${time - sampleMean} / ${sampleStd} * ${Math.sqrt(times.size)} > ${tBeta}")
+        return Some(false)
+      }
+    }
+    // println(s"No result after ${times.size} iterations")
+    None
+  }
+
   /**
     * Test whether a function is slower than the specified time.
     *
