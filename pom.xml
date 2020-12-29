@@ -6,7 +6,7 @@
 
     <groupId>io.citrine</groupId>
     <artifactId>theta</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>A portable timing library</description>
@@ -36,12 +36,12 @@
 
 
     <properties>
-        <breeze.version>0.13.2</breeze.version>
+        <breeze.version>1.1</breeze.version>
         <math3.version>3.6.1</math3.version>
         <netlib.version>1.1.2</netlib.version>
         <junit.version>4.12</junit.version>
         <scala-maven-plugin.version>3.2.1</scala-maven-plugin.version>
-        <scala.version>2.12.4</scala.version>
+        <scala.version>2.13.0</scala.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
@@ -61,7 +61,7 @@
         </dependency>
         <dependency>
             <groupId>org.scalanlp</groupId>
-            <artifactId>breeze_2.12</artifactId> <!-- or 2.11 -->
+            <artifactId>breeze_2.13</artifactId> <!-- or 2.11 -->
             <version>${breeze.version}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-math3 -->
