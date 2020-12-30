@@ -39,7 +39,7 @@
         <breeze.version>1.1</breeze.version>
         <math3.version>3.6.1</math3.version>
         <netlib.version>1.1.2</netlib.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <scala-maven-plugin.version>3.2.1</scala-maven-plugin.version>
         <scala.version>2.13.4</scala.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
