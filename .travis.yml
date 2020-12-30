@@ -1,8 +1,8 @@
 language: scala
 scala:
-- 2.11.2
+- 2.13.4
 jdk:
-- oraclejdk8
+- openjdk8
 install: mvn install -P !build-extras -DskipTests=true -Dmaven.javadoc.skip=true -B
   -V
 script: mvn test -P !build-extras -B
